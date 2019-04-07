@@ -9,7 +9,7 @@ IN3 = 13
 IN4 = 15
 
 # for servo motor
-# other 2 pins 
+# other 2 pins
 # RED : 12V
 # BLACK : GND
 SERVO = 32 # PWM pin
@@ -20,14 +20,14 @@ control = [5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10]
 def init():
     # gpio.BOARD: using #pin / gpio.BCM: using #GPIO
     gpio.setmode(gpio.BOARD)
-    
+
     # gpio.OUT: use this pin for OUTPUT / gpio.IN: use this pin for INPUT
     gpio.setup(IN1, gpio.OUT)
     gpio.setup(IN2, gpio.OUT)
     gpio.setup(IN3, gpio.OUT)
     gpio.setup(IN4, gpio.OUT)
     gpio.setup(SERVO, gpio.OUT)
-    
+
     #gpio.output(IN1, False)
     #gpio.output(IN2,False)
 
@@ -53,10 +53,10 @@ def test_servo_motor():
     try:
         while True:
             for duty in range(50, 81, 5):
-                # duty: ratio of HIGH on period // if 5V -> 50% Duty cycle == 2.5V 
+                # duty: ratio of HIGH on period // if 5V -> 50% Duty cycle == 2.5V
                 # increasing the duty cycle increases the pulse width
                 # ratio of pulse width == duty cycle
-                servo_motor.ChangeDutyCycle(duty) 
+                servo_motor.ChangeDutyCycle(duty)
                 time.sleep(0.5)
             for duty in range(80, 50, -5):
                 servo_motor.ChangeDutyCycle(duty)
@@ -66,12 +66,6 @@ def test_servo_motor():
         #gpio.cleanup()
         servo_motor.stop()
         gpio.output(SERVO, False)
-
-def set_duty(duty):
-    servo_motor = gpio.PWM(SERVO, FREQUENCY)
-    servo_motor.start(0)
-    servo_motor.ChangeDutyCycle(duty)
-    time.sleep(0.5)
 
 def test_servo_motor_2():
     servo_motor = gpio.PWM(SERVO, FREQUENCY)
@@ -107,6 +101,35 @@ def test_servo_motor_2():
     except KeyboardInterrupt:
         servo_motor.stop()
 
+def test_servo_motor_3():
+    # in servo motor,
+    # 1ms pulse for 0 degree (LEFT)
+    # 1.5ms pulse for 90 degree (MIDDLE)
+    # 2ms pulse for 180 degree (RIGHT)
+
+    # so for 50hz, one frequency is 20ms
+    # duty cycle for 0 degree = (1/20)*100 = 5%
+    # duty cycle for 90 degree = (1.5/20)*100 = 7.5%
+    # duty cycle for 180 degree = (2/20)*100 = 10%
+
+    servo_motor = gpio.PWM(SERVO, FREQUENCY)
+    servo_motor.start(2.5) # starting duty cycle (it set the servo to 0 degree)
+
+    try:
+        while True:
+            for x in range(11):
+                servo_motor.ChangeDutyCycle(control[x])
+                time.sleep(0.03)
+                print(x)
+
+            for x in range(9, 0, -1):
+                servo_motor.ChangeDutyCycle(control[x])
+                time.sleep(0.03)
+                print(x)
+
+    except KeyboardInterrupt:
+        gpio.cleanup()
+
 def destruct():
     gpio.cleanup()
 
@@ -119,4 +142,3 @@ test_servo_motor_2()
 #set_duty(50)
 #set_duty(0)
 destruct()
-
