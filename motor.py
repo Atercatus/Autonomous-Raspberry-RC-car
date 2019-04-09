@@ -6,14 +6,15 @@ import numpy as np
 # for L298N motor driver
 IN1 = 7
 IN2 = 11
+ENA = 33 # PWM1 channel(33, 35)
 IN3 = 13
 IN4 = 15
 
 # for servo motor
-# other 2 pins
+# other 2 pins => direct connect
 # RED : 12V
 # BLACK : GND
-SERVO = 32 # PWM pin
+SERVO = 32 # PWM pin // PWM0 channel(12, 32) % 12 pin is DEAD!
 FREQUENCY = 50
 
 # specify degree!!!!
@@ -21,94 +22,65 @@ MIDDLE = 7.8
 MAX_LEFT = 9.3
 MAX_RIGHT = 6.7
 
-#control = [5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10]
-#control = [7.8, 8, 8.2, 8.5, 8.7, 9, 9.2, 9.3, 6.7, 7.0, 7.2, 7.5]
-
 def init():
     # gpio.BOARD: using #pin / gpio.BCM: using #GPIO
     gpio.setmode(gpio.BOARD)
 
     # gpio.OUT: use this pin for OUTPUT / gpio.IN: use this pin for INPUT
+    # DC MOTOR(L293N)
+    # OUT 1, 2
     gpio.setup(IN1, gpio.OUT)
     gpio.setup(IN2, gpio.OUT)
+    # MOTOR 1 PWM
+    gpio.setup(ENA, gpio.OUT)
+
+    # OUT 3, 4
     gpio.setup(IN3, gpio.OUT)
     gpio.setup(IN4, gpio.OUT)
+
+    # SERVO MOTOR(PWM)
     gpio.setup(SERVO, gpio.OUT)
 
+    # for unwanted movement
     gpio.output(IN1, False)
     gpio.output(IN2,False)
 
     #gpio.output(IN3, False)
     #gpio.output(IN4, False)
 
-
 def test_dc_motor(seconds):
     # False: gpio.LOW / True: gpio.HIGH
+    accelerator = gpio.PWM(ENA, FREQUENCY)
+    accelerator.start(25)
+
+    accelerator.ChangeDutyCycle(50)
     gpio.output(IN1, False)
-    gpio.output(IN2,True)
+    gpio.output(IN2, True)
+    time.sleep(1)
 
-    gpio.output(IN3, True)
-    gpio.output(IN4, True)
+    accelerator.ChangeDutyCycle(70)
+    gpio.output(IN1, False)
+    gpio.output(IN2, True)
+    time.sleep(1)
 
-    # after sleep, will return resources (ex: gpio.cleanup())
+    accelerator.ChangeDutyCycle(90)
+    gpio.output(IN1, False)
+    gpio.output(IN2, True)
+    time.sleep(1)
+
+    accelerator.ChangeDutyCycle(100)
+    gpio.output(IN1, False)
+    gpio.output(IN2, True)
+    time.sleep(1)
+
     time.sleep(seconds)
 
+    except KeyboardInterrupt:
+        accelerator.stop()
+        gpio.cleanup()`
+
+
 def test_servo_motor():
-    servo_motor = gpio.PWM(SERVO,FREQUENCY) # pin_num, frequency
-    servo_motor.start(2.5)
-
-    try:
-        while True:
-            for duty in range(50, 81, 5):
-                # duty: ratio of HIGH on period // if 5V -> 50% Duty cycle == 2.5V
-                # increasing the duty cycle increases the pulse width
-                # ratio of pulse width == duty cycle
-                servo_motor.ChangeDutyCycle(duty)
-                time.sleep(0.5)
-            for duty in range(80, 50, -5):
-                servo_motor.ChangeDutyCycle(duty)
-                time.sleep(0.5)
-
-    except KeyboardInterrupt:
-        #gpio.cleanup()
-        servo_motor.stop()
-        gpio.output(SERVO, False)
-
-def test_servo_motor_2():
-    servo_motor = gpio.PWM(SERVO, FREQUENCY)
-    servo_motor.start(2.5)
-
-    try:
-        while True:
-            servo_motor.ChangeDutyCycle(5)
-            print(5)
-            time.sleep(1.5)
-            servo_motor.ChangeDutyCycle(7.5)
-            print(7.5)
-            time.sleep(1.5)
-            servo_motor.ChangeDutyCycle(10)
-            print(10)
-            time.sleep(1.5)
-            servo_motor.ChangeDutyCycle(12.5)
-            print(12.5)
-            time.sleep(1.5)
-            servo_motor.ChangeDutyCycle(10)
-            print(10)
-            time.sleep(1.5)
-            servo_motor.ChangeDutyCycle(7.5)
-            print(7.5)
-            time.sleep(1.5)
-            servo_motor.ChangeDutyCycle(5)
-            print(5)
-            time.sleep(1.5)
-            servo_motor.ChangeDutyCycle(2.5)
-            print(2.5)
-            time.sleep(1.5)
-
-    except KeyboardInterrupt:
-        servo_motor.stop()
-
-def test_servo_motor_3():
     # in servo motor,
     # 1ms pulse for 0 degree (LEFT)
     # 1.5ms pulse for 90 degree (MIDDLE)
@@ -134,24 +106,13 @@ def test_servo_motor_3():
                 time.sleep(0.3)
                 print(x)
 
-            #for x in range(10, 0, -1):
-                #servo_motor.ChangeDutyCycle(control[x])
-                #time.sleep(1)
-                #print(control[x])
-
     except KeyboardInterrupt:
         gpio.cleanup()
-
 
 def destruct():
     gpio.cleanup()
 
 init()
 #test_dc_motor(4)
-test_servo_motor_3()
-#test_servo_motor()
-#set_angle(45)
-#set_duty(8)
-#set_duty(50)
-#set_duty(0)
+test_servo_motor()
 destruct()
