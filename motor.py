@@ -1,5 +1,6 @@
 import RPi.GPIO as gpio
 import time
+import numpy as np
 
 #test
 # for L298N motor driver
@@ -15,7 +16,13 @@ IN4 = 15
 SERVO = 32 # PWM pin
 FREQUENCY = 50
 
-control = [5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10]
+# specify degree!!!!
+MIDDLE = 7.8 
+MAX_LEFT = 9.3
+MAX_RIGHT = 6.7
+
+#control = [5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10]
+#control = [7.8, 8, 8.2, 8.5, 8.7, 9, 9.2, 9.3, 6.7, 7.0, 7.2, 7.5]
 
 def init():
     # gpio.BOARD: using #pin / gpio.BCM: using #GPIO
@@ -28,8 +35,8 @@ def init():
     gpio.setup(IN4, gpio.OUT)
     gpio.setup(SERVO, gpio.OUT)
 
-    #gpio.output(IN1, False)
-    #gpio.output(IN2,False)
+    gpio.output(IN1, False)
+    gpio.output(IN2,False)
 
     #gpio.output(IN3, False)
     #gpio.output(IN4, False)
@@ -115,27 +122,33 @@ def test_servo_motor_3():
     servo_motor = gpio.PWM(SERVO, FREQUENCY)
     servo_motor.start(2.5) # starting duty cycle (it set the servo to 0 degree)
 
+    degrees = np.arange(MAX_RIGHT, MAX_LEFT, 0.1)
+    
+    servo_motor.ChangeDutyCycle(MIDDLE)
+    time.sleep(1)
+    
     try:
         while True:
-            for x in range(11):
-                servo_motor.ChangeDutyCycle(control[x])
-                time.sleep(0.03)
+            for x in degrees:
+                servo_motor.ChangeDutyCycle(x)
+                time.sleep(0.3)
                 print(x)
 
-            for x in range(9, 0, -1):
-                servo_motor.ChangeDutyCycle(control[x])
-                time.sleep(0.03)
-                print(x)
+            #for x in range(10, 0, -1):
+                #servo_motor.ChangeDutyCycle(control[x])
+                #time.sleep(1)
+                #print(control[x])
 
     except KeyboardInterrupt:
         gpio.cleanup()
+
 
 def destruct():
     gpio.cleanup()
 
 init()
-test_dc_motor(2)
-test_servo_motor_2()
+#test_dc_motor(4)
+test_servo_motor_3()
 #test_servo_motor()
 #set_angle(45)
 #set_duty(8)
