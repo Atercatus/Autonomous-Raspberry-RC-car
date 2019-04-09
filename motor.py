@@ -53,31 +53,32 @@ def test_dc_motor(seconds):
     accelerator = gpio.PWM(ENA, FREQUENCY)
     accelerator.start(25)
 
-    accelerator.ChangeDutyCycle(50)
-    gpio.output(IN1, False)
-    gpio.output(IN2, True)
-    time.sleep(1)
+    try:
+        accelerator.ChangeDutyCycle(50)
+        gpio.output(IN1, False)
+        gpio.output(IN2, True)
+        time.sleep(1)
 
-    accelerator.ChangeDutyCycle(70)
-    gpio.output(IN1, False)
-    gpio.output(IN2, True)
-    time.sleep(1)
+        accelerator.ChangeDutyCycle(70)
+        gpio.output(IN1, False)
+        gpio.output(IN2, True)
+        time.sleep(1)
 
-    accelerator.ChangeDutyCycle(90)
-    gpio.output(IN1, False)
-    gpio.output(IN2, True)
-    time.sleep(1)
+        accelerator.ChangeDutyCycle(90)
+        gpio.output(IN1, False)
+        gpio.output(IN2, True)
+        time.sleep(1)
 
-    accelerator.ChangeDutyCycle(100)
-    gpio.output(IN1, False)
-    gpio.output(IN2, True)
-    time.sleep(1)
+        accelerator.ChangeDutyCycle(100)
+        gpio.output(IN1, False)
+        gpio.output(IN2, True)
+        time.sleep(1)
 
-    time.sleep(seconds)
+        time.sleep(seconds)
 
     except KeyboardInterrupt:
         accelerator.stop()
-        gpio.cleanup()`
+        gpio.cleanup()
 
 
 def test_servo_motor():
