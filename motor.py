@@ -2,25 +2,80 @@ import RPi.GPIO as gpio
 import time
 import numpy as np
 
-#test
+#######################################################
+############ for testing
+import sys, tty, termios, os
+
+### deprecated
 # for L298N motor driver
 IN1 = 7
 IN2 = 11
-ENA = 33 # PWM1 channel(33, 35)
-IN3 = 13
-IN4 = 15
+ENA = 12 # PWM1 channel(33, 35)
+# IN3 = 13
+# IN4 = 15
 
-# for servo motor
+
+########################################################
+########################################################
+### FOR SERVO MOTOR
 # other 2 pins => direct connect
 # RED : 12V
 # BLACK : GND
 SERVO = 32 # PWM pin // PWM0 channel(12, 32) % 12 pin is DEAD!
-FREQUENCY = 50
+FREQUENCY = 20 # MDD10A PWM max frequency
+PWM_MAX = 100
+
 
 # specify degree!!!!
 MIDDLE = 7.8 
 MAX_LEFT = 9.3
 MAX_RIGHT = 6.7
+
+# Disable warning from GPIO
+gpio.setwarnings(False)
+
+#########################################################
+#########################################################
+#########################################################
+###################### MDD10A Spec ######################
+
+### Button controlling
+# In this way, you can control the direction of the motors, 
+# and check if you connect the motors in the current way 
+# but cannot control the speed of the motors. 
+# When you push M1A button, 
+# current flows from output M1A to M1B
+# and the Red LED M1A will light as well as 
+# for button M1B current flows from output M1B to M1A 
+# and the Red LED M1B will light.
+
+### Pins Input controlling
+# DIR1: Direction input(Motor 1), low(0 ~ 0.5v), high(3 ~ 5.5v)
+# PWM1: PWM input for speed control (Motor 1), Max 20Hz
+# DIR2: Direction input(Motor 2), low(0 ~ 0.5v), high(3 ~ 5.5v)
+# PWM2: PWM input for speed control (Motor 2), Max 20Hz
+# GND : Ground
+
+### Logic controller
+# there are four input PWM1-DIR1-PWM2-DIR2
+# with MAX Frequency 20Hz, and it works as follow,
+#       Input   DIR     Output-A        Output-B
+# PWM   off     X       off             off
+# PWM   on      off     on              off
+# PWM   on      on      off             on
+
+#########################################################
+#########################################################
+#########################################################
+
+
+DIR1 = 15
+PWM1 = 33
+
+################## Must be objectified later
+motor = gpio.PWM(PWM1, FREQUENCY)
+motor_power = 0
+speed = 0
 
 def init():
     # gpio.BOARD: using #pin / gpio.BCM: using #GPIO
@@ -35,8 +90,12 @@ def init():
     gpio.setup(ENA, gpio.OUT)
 
     # OUT 3, 4
-    gpio.setup(IN3, gpio.OUT)
-    gpio.setup(IN4, gpio.OUT)
+    # gpio.setup(IN3, gpio.OUT)
+    # gpio.setup(IN4, gpio.OUT)
+
+    # DC MOTOR(MDD10A)
+    gpio.setup(DIR1, gpio.OUT)
+    gpio.setup(PWM1, gpio.OUT)
 
     # SERVO MOTOR(PWM)
     gpio.setup(SERVO, gpio.OUT)
@@ -45,8 +104,134 @@ def init():
     gpio.output(IN1, False)
     gpio.output(IN2,False)
 
+    gpio.output(DIR1, False)
+
     #gpio.output(IN3, False)
     #gpio.output(IN4, False)
+
+def run():
+    ################## Must be objectified later
+    # motor = gpio.PWM(PWM1, FREQUENCY)
+ 
+    motor.start(0)
+    motor.ChangeDutyCycle(0)
+
+    ################## Must be objectified later
+    # motor_power = 0
+
+    show_inst()
+
+    while True:
+        # Keyboard character retreival method.
+        # This method will save the pressed key into the variable char
+        input = getch()
+
+        if(input == "w"):
+            forward()
+        elif(input == "s"):
+            reverse()
+        elif(input == "a"):
+            steer_left()
+        elif(input == "d"):
+            steer_right()
+        elif(input == "q"):
+            stop_motor()
+        elif(input == "x"):
+            stop_program()
+        else:
+            pass
+        
+        input =""
+
+
+def forward():
+    speed = speed + 0.1
+
+    if speed > 1:
+        speed = 1
+
+    set_motor(speed)
+    show_inst()
+
+def reverse():
+    speed = speed - 0.1
+
+    if speed < -1:
+        speed = -1
+
+    set_motor(speed)
+    show_inst()
+
+def stop_motor():
+    speed = 0
+    set_motor(0)
+    show_inst()
+
+def steer_right():
+    print("right")
+
+def steer_left():
+    print("left")
+
+def stop_program():
+    set_motor(0)
+    print("Program Ended")
+
+def show_inst():
+    os.system('clear')
+    print("w/s: direction")
+    print("a/d: steering")
+    print("q: stops the motor")
+    print("x: exit")
+    print("================= Speed Control ==============")
+    print("motor: ", speed)
+
+
+# The catch method can determine which key has been pressed
+# by the user on the keyboard
+def getch():
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+
+    try:
+        tty.setraw(sys.stdin.fileno())
+        ch = sys.stdin.read(1)
+
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+
+    return ch
+
+
+def set_motor(power):
+    
+    if power < 0:
+        # Reverse mode for the motor
+        gpio.output(DIR1, False)
+        pwm = -int(PWM_MAX * power)
+
+        if pwm > PWM_MAX:
+            pwm = PWM_MAX
+
+    elif power > 0:
+        # Forward mode for the motor
+        gpio.output(DIR1, True)
+        pwm = int(PWM_MAX * power)
+        if pwm > PWM_MAX:
+            pwm = PWM_MAX
+
+    else:
+        # Stop mode for the motor
+        gpio.output(DIR1, False)
+        pwm = 0
+
+    motor_power = pwm
+    motor.ChangeDutyCycle(pwm)
+
+
+
+
+
 
 def test_dc_motor(seconds):
     # False: gpio.LOW / True: gpio.HIGH
@@ -111,7 +296,11 @@ def test_servo_motor():
         gpio.cleanup()
 
 def destruct():
+    gpio.output(DIR1, False)
     gpio.cleanup()
+
+
+
 
 init()
 #test_dc_motor(4)
