@@ -229,10 +229,6 @@ def set_motor(power):
     motor.ChangeDutyCycle(pwm)
 
 
-
-
-
-
 def test_dc_motor(seconds):
     # False: gpio.LOW / True: gpio.HIGH
     accelerator = gpio.PWM(ENA, FREQUENCY)
@@ -298,8 +294,6 @@ def test_servo_motor():
 def destruct():
     gpio.output(DIR1, False)
     gpio.cleanup()
-
-
 
 
 init()
