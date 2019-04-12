@@ -72,11 +72,6 @@ gpio.setwarnings(False)
 DIR1 = 15
 PWM1 = 33
 
-################## Must be objectified later
-motor = gpio.PWM(PWM1, FREQUENCY)
-motor_power = 0
-speed = 0
-
 def init():
     # gpio.BOARD: using #pin / gpio.BCM: using #GPIO
     gpio.setmode(gpio.BOARD)
@@ -145,6 +140,7 @@ def run():
 
 
 def forward():
+    global speed 
     speed = speed + 0.1
 
     if speed > 1:
@@ -154,6 +150,7 @@ def forward():
     show_inst()
 
 def reverse():
+    global speed
     speed = speed - 0.1
 
     if speed < -1:
@@ -163,6 +160,7 @@ def reverse():
     show_inst()
 
 def stop_motor():
+    global speed
     speed = 0
     set_motor(0)
     show_inst()
@@ -174,8 +172,9 @@ def steer_left():
     print("left")
 
 def stop_program():
-    set_motor(0)
     print("Program Ended")
+    gpio.output(DIR1, False)
+    gpio.cleanup()
 
 def show_inst():
     os.system('clear')
@@ -297,6 +296,18 @@ def destruct():
 
 
 init()
+
+################## Must be objectified later
+motor = gpio.PWM(PWM1, FREQUENCY)
+motor_power = 0
+speed = 0
+
+motor.start(0)
+motor.ChangeDutyCycle(0)
+
+init()
+run()
+
 #test_dc_motor(4)
-test_servo_motor()
+#test_servo_motor()
 destruct()
