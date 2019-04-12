@@ -16,10 +16,10 @@ class Car:
 
     # specify degree!!!!
     __MIDDLE = 7.8 
-    __MAX_LEFT = 9.0
-    __MAX_RIGHT = 6.6
-    __STEER_UNIT = 0.1
-    __MAX_STEER = 1.2
+    __MAX_LEFT = 9.4
+    __MAX_RIGHT = 6.4
+    __STEER_UNIT = 0.2
+    __MAX_STEER = 1.5
     # __MAX_LEFT = 9.3
     # __MAX_RIGHT = 6.7
 
@@ -96,6 +96,7 @@ class Car:
         print("x: exit")
         print("================= Speed Control ==============")
         print("motor: ", self.speed)
+        print("steer: ", self.steer)
 
     def forward(self):
         self.speed = self.speed + Car.__SPEED_UNIT
@@ -155,8 +156,9 @@ class Car:
             gpio.output(Car.__DIR1, False)
             pwm = 0
 
+        print(pwm)
         self.motor_power = pwm
-        self.motor.ChangeDutyCycle(pwm)
+        self.motor.ChangeDutyCycle(int(pwm))
 
     def stop_program(self):
         print("Program Ended")
@@ -199,7 +201,12 @@ class Car:
                 self.stop_motor()
             elif(input == "x"):
                 self.stop_program()
+                break
             else:
                 pass
             
             input =""
+
+
+car = Car()
+car.run()
