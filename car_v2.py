@@ -5,8 +5,6 @@ import numpy as np
 import sys, tty, termios, os
 import pygame
 
-
-
 class Car:
     __DIR1 = 15
     __PWM1 = 33
@@ -92,23 +90,14 @@ class Car:
         self.steer = 0
 
         # Controller
-        self.controller = {}
-
-    def show_inst(self):
-        os.system('clear')
-        print("Left handle: direction")
-        print("Right handle: steering")
-        print("X: exit")
-        print("================= Speed Control ==============")
-        print("motor: ", self.speed)
-        print("steer: ", self.steer)
+        self.controller = self.bind()
 
     def set_steer(self):
         self.steer = Car.__MIDDLE + (self.controller.get_axis(env.R_HORIZONTAL) * Car.__MAX_STEER)
         self.servo_motor.ChangeDutyCycle(self.steer)
 
     def set_speed(self):
-        self.speed = self.controller.get_axis(env.L_VERTICAL)
+        self.speed = -self.controller.get_axis(env.L_VERTICAL)
 
         if self.speed < 0:
             # Reverse mode for the motor
@@ -124,28 +113,31 @@ class Car:
 
     def turn_off(self):
         print("Program Ended")
-        gpio.output(Car.__DIR1, False)
+        #gpio.output(Car.__DIR1, False)
         gpio.cleanup()
 
     def bind(self):
         pygame.init()
         pygame.joystick.init()
-        self.controller = pygame.joystick.Joystick(0)
-        self.controller.init()
+        controller = pygame.joystick.Joystick(0)
+        controller.init()
+        return controller
 
     def turn_on(self):
-        self.bind()
 
         while True:
-            self.show_inst() 
-            self.set_speed()
-            self.set_steer()
+            for event in pygame.event.get():
+                # if press x btn
+                if self.controller.get_button(1):
+                    self.turn_off()
 
-            # test
-            print(self.controller.get_button(0))
+                self.set_speed()
+                self.set_steer()
 
-            # if press x btn
-            # turn_off
+                # test
+                print("speed: ", self.speed)
+                print("steer: ", self.steer)
 
 car = Car()
 car.turn_on()
+

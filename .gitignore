@@ -1,6 +1,8 @@
 *~
 *.swp
 *.swo
+*.bmp
 
 .vscode
 /images
+__pycache__
