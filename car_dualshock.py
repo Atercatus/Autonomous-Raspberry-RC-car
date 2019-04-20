@@ -4,11 +4,13 @@ import time
 import numpy as np
 import sys, tty, termios, os
 import pygame
+import Camera as cam
+import csv
 
 class Car:
     __DIR1 = 15
-    __PWM1 = 33
-    __SERVO = 32 # PWM pin // PWM0 channel(12, 32) % 12 pin is DEAD!
+    __PWM1 = 3
+    __SERVO = 33 # PWM pin // PWM0 channel(12, 32) % 12 pin is DEAD!
     __DC_FREQUENCY = 20 # MDD10A PWM max frequency
     __SERVO_FREQUENCY = 50
     __MAX_PWM = 100
@@ -92,12 +94,16 @@ class Car:
         # Controller
         self.controller = self.bind()
 
-    def set_steer(self):
-        self.steer = Car.__MIDDLE + (self.controller.get_axis(env.R_HORIZONTAL) * Car.__MAX_STEER)
+        # Recorder
+        self.camera = cam.Camera()
+        self.recording = False
+
+    def set_steer(self, steer):
+        self.steer = Car.__MIDDLE + (steer * Car.__MAX_STEER)
         self.servo_motor.ChangeDutyCycle(self.steer)
 
-    def set_speed(self):
-        self.speed = -self.controller.get_axis(env.L_VERTICAL)
+    def set_speed(self, speed):
+        self.speed = speed
 
         if self.speed < 0:
             # Reverse mode for the motor
@@ -110,12 +116,7 @@ class Car:
 
         self.motor_power = pwm
         self.motor.ChangeDutyCycle(int(pwm))
-
-    def turn_off(self):
-        print("Program Ended")
-        #gpio.output(Car.__DIR1, False)
-        gpio.cleanup()
-
+    
     def bind(self):
         pygame.init()
         pygame.joystick.init()
@@ -123,21 +124,65 @@ class Car:
         controller.init()
         return controller
 
+    def record(self):
+        #print("Recording .................")
+        image_pathes = self.camera.record(self.camera.shot())
+        
+        # left mid right
+        with open("./driving_log.csv", 'a') as csv_writer:
+            writer = csv.writer(csv_writer, delimiter=',')
+            writer.writerow([image_pathes[0], image_pathes[1], image_pathes[2], self.steer])
+
+
+    def stop_record(self):
+        print("Stop recording ............")
+
+
     def turn_on(self):
+        self.servo_motor.ChangeDutyCycle(Car.__MIDDLE)
+        speed = 0
+        steer = 0
 
-        while True:
+        while True:   
             for event in pygame.event.get():
-                # if press x btn
-                if self.controller.get_button(1):
-                    self.turn_off()
 
-                self.set_speed()
-                self.set_steer()
+                if event.type == pygame.JOYAXISMOTION:
+                    if event.axis == env.L_VERTICAL:
+                        speed = event.value
+                    elif event.axis == env.R_HORIZONTAL:
+                        steer = event.value
+            
+                elif event.type == pygame.JOYBUTTONDOWN:
+                    if event.button == env.X_BTN:
+                        self.turn_off()
+                        exit()
+                    elif event.button == env.O_BTN:
+                        print("Recording .................")
+                        self.recording = True
+                    elif event.button == env.S_BTN:
+                        self.recording = False
+                        self.stop_record()
 
-                # test
-                print("speed: ", self.speed)
-                print("steer: ", self.steer)
+            self.set_speed(speed)
+            self.set_steer(steer)
+            if self.recording == True and speed != 0:
+                self.record()
 
-car = Car()
-car.turn_on()
+    def turn_off(self):
+        print("Program Ended")
+        #gpio.output(Car.__DIR1, False)
+        gpio.cleanup()
+
+
+if __name__ == "__main__":
+    print("Trun on the car")
+    car = Car()
+    car.turn_on()
+
+
+
+
+
+
+
 

@@ -21,7 +21,7 @@ ENA = 12 # PWM1 channel(33, 35)
 # other 2 pins => direct connect
 # RED : 12V
 # BLACK : GND
-SERVO = 32 # PWM pin // PWM0 channel(12, 32) % 12 pin is DEAD!
+SERVO = 3 # PWM pin // PWM0 channel(12, 32) % 12 pin is DEAD!
 FREQUENCY = 20 # MDD10A PWM max frequency
 PWM_MAX = 100
 
@@ -306,8 +306,8 @@ motor.start(0)
 motor.ChangeDutyCycle(0)
 
 init()
-run()
+#run()
 
 #test_dc_motor(4)
-#test_servo_motor()
+test_servo_motor()
 destruct()

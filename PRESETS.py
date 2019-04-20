@@ -30,7 +30,8 @@ R_VERTICAL = 5 # AXIS is 5 (TOP ~ BOTTOM) // -1 ~ 1)
 # event.type == pygame.JOYBUTTONUP
 
 X_BTN = 1 # X button
-
+O_BTN = 2 # O button
+S_BTN = 0 # Square button
 ###########################################################
 ###########################################################
 
