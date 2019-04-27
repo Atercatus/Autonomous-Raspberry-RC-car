@@ -50,11 +50,11 @@
 * **GND :** Ground
 
 ###### PWM & DIR control
-  	| Input	| DIR 		| Output A	| Output B
----- 	| ---- 	| ----		| ----		| ----
-PWM	| off	| X		| off 		| off
-PWM 	| on 	| off		| on		| off
-PWM 	| on	| on		| off		| on
+|-  	| Input	| DIR 		| Output A	| Output B|
+|:----: 	| :----:| :----:	| :----:	| :----:|
+|PWM	| off	| X		| off 		| off|
+|PWM 	| on 	| off		| on		| off|
+|PWM 	| on	| on		| off		| on|
 
 
 ## Model Architecture Design
