@@ -25,6 +25,8 @@
 - [ ] struct our models...
 
 ## RC car Structure
+![Raspberry_pi_rc_car_bb](https://user-images.githubusercontent.com/32104982/56851686-c2e92100-694c-11e9-9622-1ea69148ac64.jpg)
+
 ### Car Body Detail
 ### Motor Detail
 
