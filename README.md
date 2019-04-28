@@ -15,6 +15,7 @@
 * **Use 2 motors** 1 DC motor and 1 Servo motor
 * **Behavior cloning** we use [The NVIDIA model](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/)
 * **Object Detect** we use YOLO algorithm v3
+* **Remote control** control rc car using dualshock4 (here driver => [ds4drv](https://github.com/chrippa/ds4drv))
 
 ## RC car Structure
 ![Raspberry_pi_rc_car_bb](https://user-images.githubusercontent.com/32104982/56851686-c2e92100-694c-11e9-9622-1ea69148ac64.jpg)
