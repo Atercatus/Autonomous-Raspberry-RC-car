@@ -16,15 +16,6 @@
 * **Behavior cloning** we use [The NVIDIA model](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/)
 * **Object Detect** we use YOLO algorithm v3
 
-
-## To do list
-- [ ] implement survo motor controller
-- [ ] implement dc motor controller
-- [ ] merge motor controllers
-- [ ] testing web cam
-- [ ] implement how to controll our rc car
-- [ ] struct our models...
-
 ## RC car Structure
 ![Raspberry_pi_rc_car_bb](https://user-images.githubusercontent.com/32104982/56851686-c2e92100-694c-11e9-9622-1ea69148ac64.jpg)
 
@@ -58,10 +49,18 @@
 
 
 ## Autonomous Driving
-[End to End Learning for Self-Driving Cars](https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf) 
+[End to End Learning for Self-Driving Cars](https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf)
+
+#### Block Diagram of DAVE-2
+![image](https://user-images.githubusercontent.com/32104982/56862899-bf0bdc00-69ea-11e9-8326-b0ddd0bba539.png)
+
 
 #### Neural Network Architecture
 ![image](https://user-images.githubusercontent.com/32104982/56852670-0f3a5e00-6959-11e9-9e7f-3e540e0b0814.png)
+(source)[(https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf]</br>
+The network consists of 9 layers, including a normalization layer, 5 convolutional layers and 3 fully connected layers. The input image is split into **YUV** planes and passed to the network.
+They use strided confolutions in the first three convolutional layers with a 2x2 stride and a 5x5 kernel and a non-strided convolution with a 3x3 kernel size in the last two convolutional layers.
+
 
 #### Model Summary
 | Layer (type)			| Output Shape 			| Param # 	| Units | Kernel size | Activation |
@@ -89,7 +88,7 @@ Non-trainable params: 0 </br>
 * **epochs:** 10
 
 ### Simulation
-[Detail](https://github.com/Atercatus/Autonomous-Raspberry-RC-car/tree/develop/Simulator) for simulation
+[Detail](https://github.com/Atercatus/Autonomous-Raspberry-RC-car/tree/develop/Simulator) for simulation </br>
 Player plays the [simulation game](https://github.com/udacity/self-driving-car-sim) manually and records car's information. Use 3 cameras(left, center, right)
 
 #### Preprocessing
