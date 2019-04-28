@@ -52,7 +52,8 @@
 [End to End Learning for Self-Driving Cars](https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf)
 
 #### Block Diagram of DAVE-2
-![image](https://user-images.githubusercontent.com/32104982/56862899-bf0bdc00-69ea-11e9-8326-b0ddd0bba539.png)
+![image](https://user-images.githubusercontent.com/32104982/56863005-e0b99300-69eb-11e9-920f-b34d3d14d2c5.png)
+
 
 
 #### Neural Network Architecture
