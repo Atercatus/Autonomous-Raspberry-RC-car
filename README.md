@@ -58,7 +58,9 @@
 
 #### Neural Network Architecture
 ![image](https://user-images.githubusercontent.com/32104982/56852670-0f3a5e00-6959-11e9-9e7f-3e540e0b0814.png)
-(source)[(https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf]</br>
+
+* **[source](https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf)** </br>
+
 The network consists of 9 layers, including a normalization layer, 5 convolutional layers and 3 fully connected layers. The input image is split into **YUV** planes and passed to the network.
 They use strided confolutions in the first three convolutional layers with a 2x2 stride and a 5x5 kernel and a non-strided convolution with a 3x3 kernel size in the last two convolutional layers.
 
