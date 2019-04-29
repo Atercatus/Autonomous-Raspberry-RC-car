@@ -6,14 +6,16 @@
 </h3>
 
 ## Problems
-- [ ] 보조배터리 사용 시 완충 균일한 전력 공급이 불가해 자주 장비가 정지하는 경우가 발생한다.
+- [x] ~~서보 모터에서 발생하는 떨림~~ => PWM of Raspberry Pie is the structure that the software creates, so the DUTY value that determines the rotation angle of the servo shakes.
 - [ ] 서보 모터에서 저전력이 발생했다는 경고가 자주 뜸
-- [ ] 서보 보터의 잦은 떨림 
+- [ ] 라즈베리파이의 처리속도 한계로 인한 낮은 FPS
+- [ ] Driving 과 Object detection을 동시에 수행하기에 부족한 Raspberry pi의 자원
+- [ ] 훈련을 위한 Track이 부족하다 / 제작하기엔 예산이 부족
 
 ## Overview
 * **Use raspberry pi 3**
 * **Use 2 motors** 1 DC motor and 1 Servo motor
-* **Behavior cloning** we use [The NVIDIA model](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/)
+* **Behavior cloning** we are inspired by [DAVE-2 System](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/)
 * **Object Detect** we use YOLO algorithm v3
 * **Remote control** control rc car using dualshock4 (here driver => [ds4drv](https://github.com/chrippa/ds4drv))
 
@@ -116,7 +118,8 @@ def img_preprocess(img):
 * **[imgaug](https://imgaug.readthedocs.io/en/latest/)** is a library for image augmentation in machine learning experiments. It supports a wide range of augmentation techniques, allows to easily combine these and to execute them in random order or on multiple CPU cores, has a simple yet powerful stochastic interface and can not only augment images, but also keypoints/landmarks, bounding boxes, heatmaps and segmentation maps.
 
 #### Results
-TODO: add youtube video
+[![](http://img.youtube.com/vi/aoWW9ZqTkPg/0.jpg)](http://www.youtube.com/watch?v=aoWW9ZqTkPg "")
+
 
 ## Object Detection
 #### Hyperparameter
