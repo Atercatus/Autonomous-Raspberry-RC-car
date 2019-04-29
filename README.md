@@ -25,7 +25,7 @@
 ### Motor Detail
 
 #### MDD10A
-![image](https://user-images.githubusercontent.com/32104982/56851707-2b380280-694d-11e9-8a9e-5b5693c8ebb7.png)
+![image](https://user-images.githubusercontent.com/32104982/56896560-010a5000-6ac7-11e9-8b25-444720910cfc.png)
 
 * **M1A, M1B :** Output motor 1
 * **M2A, M2B :** Output motor 2
