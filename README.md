@@ -12,6 +12,15 @@
 - [ ] Driving 과 Object detection을 동시에 수행하기에 부족한 Raspberry pi의 자원
 - [ ] 훈련을 위한 Track이 부족하다 / 제작하기엔 예산이 부족
 
+## Schedule
+* **[Calander](https://freedcamp.com/Last_chance_vUq/Autonomous_rc_ca_JvM/calendar)**
+
+###### April
+![image](https://user-images.githubusercontent.com/32104982/56899659-f489f580-6ace-11e9-9ada-b4aab66d3332.png)
+
+###### May
+![image](https://user-images.githubusercontent.com/32104982/56899696-13888780-6acf-11e9-9d8d-75f8dcad5624.png)
+
 ## Overview
 * **Use raspberry pi 3**
 * **Use 2 motors** 1 DC motor and 1 Servo motor
