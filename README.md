@@ -6,7 +6,7 @@
 </h3>
 
 ## Problems
-- [x] ~~서보 모터에서 발생하는 떨림~~ => PWM of Raspberry Pie is the structure that the software creates, so the DUTY value that determines the rotation angle of the servo shakes.
+- [x] ~~서보 모터에서 발생하는 떨림~~ => PWM of Raspberry Pi is the structure that the software creates, so the DUTY value that determines the rotation angle of the servo shakes.
 - [ ] 서보 모터에서 저전력이 발생했다는 경고가 자주 뜸
 - [ ] 라즈베리파이의 처리속도 한계로 인한 낮은 FPS
 - [ ] Driving 과 Object detection을 동시에 수행하기에 부족한 Raspberry pi의 자원
