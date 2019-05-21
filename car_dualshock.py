@@ -5,6 +5,7 @@ import numpy as np
 import sys, tty, termios, os
 import pygame
 import Camera as cam
+import ModelLoader as loader
 import csv
 
 class Car:
@@ -15,10 +16,10 @@ class Car:
     __SERVO_FREQUENCY = 50
     __MAX_PWM = 100
     __MAX_SPEED = 1
-    __SPEED_UNIT = 0.1    
+    __SPEED_UNIT = 0.1
 
     # specify degree!!!!
-    __MIDDLE = 7.8 
+    __MIDDLE = 7.8
     __MAX_LEFT = 9.4
     __MAX_RIGHT = 6.4
     __STEER_UNIT = 0.2
@@ -35,13 +36,13 @@ class Car:
     ###################### MDD10A Spec ######################
 
     ### Button controlling
-    # In this way, you can control the direction of the motors, 
-    # and check if you connect the motors in the current way 
-    # but cannot control the speed of the motors. 
-    # When you push M1A button, 
+    # In this way, you can control the direction of the motors,
+    # and check if you connect the motors in the current way
+    # but cannot control the speed of the motors.
+    # When you push M1A button,
     # current flows from output M1A to M1B
-    # and the Red LED M1A will light as well as 
-    # for button M1B current flows from output M1B to M1A 
+    # and the Red LED M1A will light as well as
+    # for button M1B current flows from output M1B to M1A
     # and the Red LED M1B will light.
 
     ### Pins Input controlling
@@ -98,6 +99,9 @@ class Car:
         self.camera = cam.Camera()
         self.recording = False
 
+        # Loader
+        self.loader = loader.ModelLoader()
+
     def set_steer(self, steer):
         self.steer = Car.__MIDDLE + (steer * Car.__MAX_STEER)
         self.servo_motor.ChangeDutyCycle(self.steer)
@@ -109,14 +113,14 @@ class Car:
             # Reverse mode for the motor
             gpio.output(Car.__DIR1, False)
             pwm = -int(Car.__MAX_PWM * self.speed)
-        
+
         else :
             gpio.output(Car.__DIR1, True)
             pwm = int(Car.__MAX_PWM * self.speed)
 
         self.motor_power = pwm
         self.motor.ChangeDutyCycle(int(pwm))
-    
+
     def bind(self):
         pygame.init()
         pygame.joystick.init()
@@ -127,7 +131,7 @@ class Car:
     def record(self):
         #print("Recording .................")
         image_pathes = self.camera.record(self.camera.shot())
-        
+
         # left mid right
         with open("./driving_log.csv", 'a') as csv_writer:
             writer = csv.writer(csv_writer, delimiter=',')
@@ -143,7 +147,7 @@ class Car:
         speed = 0
         steer = 0
 
-        while True:   
+        while True:
             for event in pygame.event.get():
 
                 if event.type == pygame.JOYAXISMOTION:
@@ -151,7 +155,7 @@ class Car:
                         speed = event.value
                     elif event.axis == env.R_HORIZONTAL:
                         steer = event.value
-            
+
                 elif event.type == pygame.JOYBUTTONDOWN:
                     if event.button == env.X_BTN:
                         self.turn_off()
@@ -173,16 +177,22 @@ class Car:
         #gpio.output(Car.__DIR1, False)
         gpio.cleanup()
 
+    def auto_driving(self):
+        try:
+            self.set_speed(0.5)
+            while True:
+                img = self.camera.oneshot()
+                self.set_steer(self.loader.predict(img))
+
+        except KeyboardInterrupt:
+            self.turn_off()
+
 
 if __name__ == "__main__":
-    print("Trun on the car")
+    # print("Trun on the car")
+    # car = Car()
+    # car.turn_on()
+
+    print("Autunomous mode")
     car = Car()
-    car.turn_on()
-
-
-
-
-
-
-
-
+    car.auto_driving()
