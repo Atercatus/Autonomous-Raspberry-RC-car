@@ -6,8 +6,8 @@ from datetime import datetime
 class Camera:
     def __init__(self):
         self.left_video_capture = cv2.VideoCapture(0)
-        self.middle_video_capture = cv2.VideoCapture(1) 
-        self.right_video_capture = cv2.VideoCapture(2) 
+        self.middle_video_capture = cv2.VideoCapture(2) 
+        self.right_video_capture = cv2.VideoCapture(1) 
         self.path = os.path.join(os.getcwd(), "images")
    
     def shot(self):
@@ -21,10 +21,16 @@ class Camera:
 
     def record(self, frames):
         now = datetime.now()
-        suffix = "-" + str(now.year) + "-" + str(now.month) + "-" + str(now.day) + "-" + str(now.hour) + "-" + str(now.minute) + "-" + str(now.second) + ".bmp"
+        suffix = "-" + str(now.year) + "-" + str(now.month) + "-" + str(now.day) + "-" + str(now.hour) + "-" + str(now.minute) + "-" + str(now.second) + str(now.microsecond) +  ".bmp"
+        
         left_img_filename = os.path.join(self.path, "left" + suffix)
         mid_img_filename = os.path.join(self.path, "mid" + suffix)
         right_img_filename = os.path.join(self.path, "right" + suffix)
+
+        #left_img_filename = self.path, "left" + suffix
+        #mid_img_filename = self.path, "mid" + suffix
+        #right_img_filename = self.path, "right" + suffix
+
 
         cv2.imwrite(left_img_filename, frames[0])
         cv2.imwrite(mid_img_filename, frames[1])
