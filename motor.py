@@ -21,15 +21,15 @@ ENA = 12 # PWM1 channel(33, 35)
 # other 2 pins => direct connect
 # RED : 12V
 # BLACK : GND
-SERVO = 3 # PWM pin // PWM0 channel(12, 32) % 12 pin is DEAD!
-FREQUENCY = 20 # MDD10A PWM max frequency
+SERVO = 32 # PWM pin // PWM0 channel(12, 32) % 12 pin is DEAD!
+FREQUENCY = 50 # MDD10A PWM max frequency
 PWM_MAX = 100
 
 
 # specify degree!!!!
-MIDDLE = 7.8 
-MAX_LEFT = 9.3
-MAX_RIGHT = 6.7
+MIDDLE = 6.0 
+MAX_LEFT = 7.0
+MAX_RIGHT = 5.0
 
 # Disable warning from GPIO
 gpio.setwarnings(False)
@@ -70,7 +70,7 @@ gpio.setwarnings(False)
 
 
 DIR1 = 15
-PWM1 = 33
+PWM1 = 32
 
 def init():
     # gpio.BOARD: using #pin / gpio.BCM: using #GPIO
@@ -298,14 +298,14 @@ def destruct():
 init()
 
 ################## Must be objectified later
-motor = gpio.PWM(PWM1, FREQUENCY)
-motor_power = 0
-speed = 0
+#motor = gpio.PWM(PWM1, FREQUENCY)
+#motor_power = 0
+#speed = 0
 
-motor.start(0)
-motor.ChangeDutyCycle(0)
+#motor.start(0)
+#motor.ChangeDutyCycle(0)
 
-init()
+#init()
 #run()
 
 #test_dc_motor(4)

@@ -8,23 +8,21 @@ import Camera as cam
 import csv
 
 class Car:
-    __DIR1 = 15
-    __PWM1 = 3
-    __SERVO = 33 # PWM pin // PWM0 channel(12, 32) % 12 pin is DEAD!
+    __DIR1 = 33
+    __PWM1 = 12
+    __SERVO = 32 # PWM pin // PWM0 channel(12, 32) % 12 pin is DEAD!
     __DC_FREQUENCY = 20 # MDD10A PWM max frequency
     __SERVO_FREQUENCY = 50
-    __MAX_PWM = 100
+    __MAX_PWM = 60
     __MAX_SPEED = 1
     __SPEED_UNIT = 0.1    
 
     # specify degree!!!!
-    __MIDDLE = 7.8 
-    __MAX_LEFT = 9.4
-    __MAX_RIGHT = 6.4
+    __MIDDLE = 6.0 
+    __MAX_LEFT = 7.0
+    __MAX_RIGHT = 5.0
     __STEER_UNIT = 0.2
-    __MAX_STEER = 1.5
-    # __MAX_LEFT = 9.3
-    # __MAX_RIGHT = 6.7
+    __MAX_STEER = 1.0
 
     # Disable warning from GPIO
     gpio.setwarnings(False)
@@ -99,20 +97,21 @@ class Car:
         self.recording = False
 
     def set_steer(self, steer):
-        self.steer = Car.__MIDDLE + (steer * Car.__MAX_STEER)
+        self.steer = Car.__MIDDLE - (steer * Car.__MAX_STEER)
         self.servo_motor.ChangeDutyCycle(self.steer)
 
     def set_speed(self, speed):
         self.speed = speed
 
-        if self.speed < 0:
-            # Reverse mode for the motor
-            gpio.output(Car.__DIR1, False)
-            pwm = -int(Car.__MAX_PWM * self.speed)
-        
-        else :
+        if self.speed > 0:
+            # Reverse
             gpio.output(Car.__DIR1, True)
             pwm = int(Car.__MAX_PWM * self.speed)
+        
+        else :
+            # Forward
+            gpio.output(Car.__DIR1, False)
+            pwm = -int(Car.__MAX_PWM * self.speed)
 
         self.motor_power = pwm
         self.motor.ChangeDutyCycle(int(pwm))
@@ -142,6 +141,7 @@ class Car:
         self.servo_motor.ChangeDutyCycle(Car.__MIDDLE)
         speed = 0
         steer = 0
+        term = 0
 
         while True:   
             for event in pygame.event.get():
@@ -165,12 +165,15 @@ class Car:
 
             self.set_speed(speed)
             self.set_steer(steer)
-            if self.recording == True and speed != 0:
+            term+=1
+            if self.recording == True and speed != 0 and term >= 2000:
                 self.record()
+                term = 0
 
     def turn_off(self):
         print("Program Ended")
-        #gpio.output(Car.__DIR1, False)
+        gpio.output(Car.__DIR1, False)
+        gpio.output(Car.__PWM1, False)
         gpio.cleanup()
 
 
