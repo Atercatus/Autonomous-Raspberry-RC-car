@@ -16,6 +16,7 @@
 * **Behavior cloning** we use [The NVIDIA model](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/)
 * **Object Detect** we use YOLO algorithm v3
 
+
 ## To do list
 - [ ] implement survo motor controller
 - [ ] implement dc motor controller
@@ -25,14 +26,48 @@
 - [ ] struct our models...
 
 ## RC car Structure
-### Car Body Detail
+![Raspberry_pi_rc_car_bb](https://user-images.githubusercontent.com/32104982/56851686-c2e92100-694c-11e9-9622-1ea69148ac64.jpg)
+
 ### Motor Detail
 
+#### MDD10A
+![image](https://user-images.githubusercontent.com/32104982/56851707-2b380280-694d-11e9-8a9e-5b5693c8ebb7.png)
+
+* **M1A, M1B :** Output motor 1
+* **M2A, M2B :** Output motor 2
+* **B+, B- :** PowerInput Max 25V, 10A
+* **PWR :** Green LED, Power
+* **M1A, M1B:** Test Button Motor1
+* **M2A, M2B:** Test Button Motor2
+
+###### Input Pins
+![image](https://user-images.githubusercontent.com/32104982/56851797-2162cf00-694e-11e9-8669-84af1ce24ad3.png)
+
+* **DIR1 :** Direction input(motor1). low(0 - 0.5v),  high(3 - 5.5v)
+* **PWM1 :** PWM input for speed control (Motor 1). Max 20Hz
+* **DIR2 :** Direction input(motor1). low(0 - 0.5v) , high(3 - 5.5v)
+* **PWM2 :** PWM input for speed control (Motor 2). Max 20Hz
+* **GND :** Ground
+
+###### PWM & DIR control
+|-  	| Input	| DIR 		| Output A	| Output B|
+|:----: 	| :----:| :----:	| :----:	| :----:|
+|PWM	| off	| X		| off 		| off|
+|PWM 	| on 	| off		| on		| off|
+|PWM 	| on	| on		| off		| on|
+
+
 ## Model Architecture Design
-### Nvidia Model
+### Autonomous Driving
+[End to End Learning for Self-Driving Cars](https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf) 
+
 #### Hyperparameter
 
-### DarkNet
+### Simulation
+##### Model
+
+
+### Object Detection
 #### Hyperparameter
 
 ## Data Preprocessing
