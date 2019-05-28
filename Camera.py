@@ -5,18 +5,20 @@ from datetime import datetime
 
 class Camera:
     def __init__(self):
-        self.left_video_capture = cv2.VideoCapture(0)
-        self.middle_video_capture = cv2.VideoCapture(1) 
-        self.right_video_capture = cv2.VideoCapture(2) 
+        #self.left_video_capture = cv2.VideoCapture(0)
+        self.middle_video_capture = cv2.VideoCapture(0) 
+        #self.right_video_capture = cv2.VideoCapture(2) 
         self.path = os.path.join(os.getcwd(), "images")
    
     def shot(self):
-        ret1, frame1 = self.left_video_capture.read() 
+        #ret1, frame1 = self.left_video_capture.read() 
         ret2, frame2 = self.middle_video_capture.read() 
-        ret3, frame3 = self.right_video_capture.read() 
-        assert ret1 == True and ret2 == True and ret3 ==True , "Video Capture Fail"
-        
-        frames = [frame1, frame2, frame3]
+        #ret3, frame3 = self.right_video_capture.read() 
+        #assert ret1 == True , "Video1 Capture Fail"
+        assert ret2 == True , "Video2 Capture Fail"
+        #assert ret3 == True , "Video3 Capture Fail"
+        #frames = [frame1, frame2, frame3]
+        frames = frame2
         return frames
 
     def record(self, frames):
