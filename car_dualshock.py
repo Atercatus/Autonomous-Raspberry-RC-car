@@ -19,11 +19,11 @@ class Car:
     __SPEED_UNIT = 0.1
 
     # specify degree!!!!
-    __MIDDLE = 7.8
-    __MAX_LEFT = 9.4
-    __MAX_RIGHT = 6.4
+    __MIDDLE = 5.8
+    __MAX_LEFT = 7.0
+    __MAX_RIGHT = 4.6
     __STEER_UNIT = 0.2
-    __MAX_STEER = 1.5
+    __MAX_STEER = 1.0
     # __MAX_LEFT = 9.3
     # __MAX_RIGHT = 6.7
 
@@ -93,7 +93,7 @@ class Car:
         self.steer = 0
 
         # Controller
-        self.controller = self.bind()
+        #self.controller = self.bind()
 
         # Recorder
         self.camera = cam.Camera()
@@ -103,21 +103,22 @@ class Car:
         self.loader = loader.ModelLoader()
 
     def set_steer(self, steer):
+        steer -= 6
         self.steer = Car.__MIDDLE + (steer * Car.__MAX_STEER)
         self.servo_motor.ChangeDutyCycle(self.steer)
 
-        print(self.steer)
+        print(steer)
 
     def set_speed(self, speed):
         self.speed = speed
 
         if self.speed < 0:
             # Reverse mode for the motor
-            gpio.output(Car.__DIR1, False)
+            gpio.output(Car.__DIR1, True)
             pwm = -int(Car.__MAX_PWM * self.speed)
 
         else :
-            gpio.output(Car.__DIR1, True)
+            gpio.output(Car.__DIR1, False)
             pwm = int(Car.__MAX_PWM * self.speed)
 
         self.motor_power = pwm
