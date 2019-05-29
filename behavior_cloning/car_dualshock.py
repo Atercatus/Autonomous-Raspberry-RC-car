@@ -106,6 +106,8 @@ class Car:
         self.steer = Car.__MIDDLE + (steer * Car.__MAX_STEER)
         self.servo_motor.ChangeDutyCycle(self.steer)
 
+        print(self.steer)
+
     def set_speed(self, speed):
         self.speed = speed
 
@@ -181,7 +183,7 @@ class Car:
         try:
             self.set_speed(0.5)
             while True:
-                img = self.camera.oneshot()
+                img = self.camera.shot()
                 self.set_steer(self.loader.predict(img))
 
         except KeyboardInterrupt:
