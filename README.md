@@ -129,16 +129,3 @@ def img_preprocess(img):
 #### Results
 [![](http://img.youtube.com/vi/aoWW9ZqTkPg/0.jpg)](http://www.youtube.com/watch?v=aoWW9ZqTkPg "")
 
-
-## Object Detection
-#### Hyperparameter
-
-#### Data Preprocessing
-
-## Model Training
-### Image Augumentation
-
-## Simulation
-### Udacity simulator
-
-## Video Record
